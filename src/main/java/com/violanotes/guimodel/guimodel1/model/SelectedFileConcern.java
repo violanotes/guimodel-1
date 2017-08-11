@@ -3,13 +3,16 @@ package com.violanotes.guimodel.guimodel1.model;
 /**
  * Created by pc on 8/11/2017.
  */
-public class SelectedFileConcern {
+public class SelectedFileConcern extends Concern {
 
     private SelectionData currentSelection;
 
     private State currentState;
 
     private FacetController facetController;
+
+    // TODO will a concern HAVE a control?
+    // No.  A concern will be called by a controller...
 
     /**
      * Initialize the concern.  Things such as the current selection.
@@ -18,8 +21,13 @@ public class SelectedFileConcern {
         currentSelection = SelectionData.newDefaultInstance();
     }
 
+    /**
+     * Pass the event on to the facet controller, if it has been set
+     * @param e the event to raise
+     */
     protected void raiseEvent(UserEvent e) {
-        facetController.handleEvent(e);
+        if (facetController != null)
+            facetController.handleEvent(e);
     }
 
     public enum State {
