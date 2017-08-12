@@ -1,4 +1,7 @@
-package com.violanotes.guimodel.guimodel1.model;
+package com.violanotes.guimodel.guimodel1.model.concern;
+
+import com.violanotes.guimodel.guimodel1.model.exception.ConcernEventHandlingException;
+import com.violanotes.guimodel.guimodel1.model.connector.FacetController;
 
 /**
  * Created by pc on 8/11/2017.
@@ -25,7 +28,7 @@ public class SelectedFileConcern extends Concern {
      * Pass the event on to the facet controller, if it has been set
      * @param e the event to raise
      */
-    protected void raiseEvent(UserEvent e) {
+    protected void raiseEvent(ConcernEvent e) throws ConcernEventHandlingException {
         if (facetController != null)
             facetController.handleEvent(e);
     }
@@ -38,7 +41,10 @@ public class SelectedFileConcern extends Concern {
     /**
      * Selection changed event.
      */
-    public static class SelectionChangedEvent extends UserEvent {
+    public static class SelectionChangedEvent extends ConcernEvent<Listener> {
+
+        private SelectionData newSelection;
+        private State newState;
 
         /**
          * Initialize default data.
@@ -47,8 +53,10 @@ public class SelectedFileConcern extends Concern {
             setClazz(SelectionChangedEvent.class);
         }
 
-        private SelectionData newSelection;
-        private State newState;
+        @Override
+        public void handleEvent(Listener listener) throws ConcernEventHandlingException {
+            listener.handleSelectionChanged();
+        }
     }
 
     public static class SelectionData {
@@ -71,8 +79,8 @@ public class SelectedFileConcern extends Concern {
     /**
      * Interface for a facet to implement.
      */
-    public interface Listener {
-        void handleSelectionChanged() throws EventHandlingException;
+    public interface Listener extends ConcernListener {
+        void handleSelectionChanged() throws ConcernEventHandlingException;
     }
 
 }
